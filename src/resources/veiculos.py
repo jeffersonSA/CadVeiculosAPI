@@ -90,7 +90,7 @@ class VeiculosList(Resource):
             print(">>>>>>> "+ str(err.messages))
             message_err = str(err.messages);
         
-        return jsonify(message_err), 401
+        return jsonify(json.dumps(message_err)), 401
     
 class VeiculosFind(Resource):
     def get(self,q):
