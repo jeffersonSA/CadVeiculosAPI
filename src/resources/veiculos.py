@@ -13,7 +13,9 @@ item = veiculos_ns.model('Veiculos', {
    'marca':fields.String(),
    'ano':fields.Integer(),
    'descricao':fields.String(),
-   'vendido':fields.Boolean()
+   'vendido':fields.Boolean(),
+   'created':fields.DateTime(),
+   'updated':fields.DateTime()
 })
 
 veiculo_schema = VeiculoSchema()
