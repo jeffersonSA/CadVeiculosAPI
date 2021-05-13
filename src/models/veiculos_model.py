@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import List
 from sqlalchemy import or_
 from src.db import db
@@ -12,8 +12,8 @@ class VeiculosModel(db.Model):
     ano = db.Column(db.Integer, nullable=False)
     descricao = db.Column(db.String(255), nullable=False)
     vendido =  db.Column(db.Boolean, nullable=False)
-    created = db.Column(db.DateTime, nullable=False)
-    updated = db.Column(db.DateTime, nullable=False)
+    created = db.Column(db.DateTime(timezone=True), nullable=False)
+    updated = db.Column(db.DateTime(timezone=True), nullable=False)
 
     def __init__(self,veiculo,marca,ano,descricao,vendido,created,updated):
         self.veiculo = veiculo
@@ -53,11 +53,11 @@ class VeiculosModel(db.Model):
 
     def save(self,):
         if self.id:
-            self.updated = datetime.now()
+            self.updated = datetime.utcnow
         else:
-            self.updated = datetime.now()
-            self.created = datetime.now()
-            
+            self.updated = datetime.utcnow
+            self.created = datetime.utcnow
+
         db.session.add(self)
         db.session.commit()
     
