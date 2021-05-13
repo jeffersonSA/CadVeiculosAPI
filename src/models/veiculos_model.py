@@ -1,3 +1,4 @@
+from datetime import date, datetime
 from typing import List
 from sqlalchemy import or_
 from src.db import db
@@ -51,6 +52,12 @@ class VeiculosModel(db.Model):
         return cls.query.filter(or_(cls.veiculo.like(search),cls.marca.like(search),cls.descricao.like(search))).all()
 
     def save(self,):
+        if self.id:
+            self.updated = datetime.now()
+        else:
+            self.updated = datetime.now()
+            self.created = datetime.now()
+            
         db.session.add(self)
         db.session.commit()
     

@@ -13,9 +13,7 @@ item = veiculos_ns.model('Veiculos', {
    'marca':fields.String(),
    'ano':fields.Integer(),
    'descricao':fields.String(),
-   'vendido':fields.Boolean(),
-   'created':fields.DateTime(),
-   'updated':fields.DateTime()
+   'vendido':fields.Boolean()
 })
 
 veiculo_schema = VeiculoSchema()
@@ -82,10 +80,7 @@ class VeiculosList(Resource):
     def post(self):
         veiculo_json = request.get_json()        
         veiculo_data = veiculo_schema.load(veiculo_json)
-        veiculo_data.created = datetime.now()
-        veiculo_data.updated = datetime.now()
         veiculo_data.save()
-
         return veiculo_schema.dump(veiculo_data), 201
 
 class VeiculosFind(Resource):
