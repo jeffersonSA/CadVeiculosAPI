@@ -52,6 +52,7 @@ class VeiculosModel(db.Model):
         return cls.query.filter(or_(cls.veiculo.like(search),cls.marca.like(search),cls.descricao.like(search))).all()
 
     def save(self,):
+    
         db.session.add(self)
         db.session.commit()
     

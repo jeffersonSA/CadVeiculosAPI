@@ -64,8 +64,9 @@ class Veiculos(Resource):
     def delete(self,id):
         veiculo_data = VeiculosModel.find_by_id(id)
         if veiculo_data:
-            veiculo_data.delete_from_db()
-            return '', 204
+            veiculo_data.delete()
+            veiculo_schema.dump(veiculo_data)
+            return jsonify(message="Deletado!", category="success", data=veiculo_schema.dump(veiculo_data), status=204)
         return {'message': ITEM_NOT_FOUND}, 404
 
 class VeiculosList(Resource):
@@ -79,7 +80,6 @@ class VeiculosList(Resource):
     @veiculos_ns.doc('Cria um novo veículo')
     def post(self):
         try:
-            message_err = ""
             veiculo_json = request.get_json()   
             veiculo_json['created'] = str(datetime.utcnow())
             veiculo_json['updated'] = str(datetime.utcnow())
@@ -87,10 +87,11 @@ class VeiculosList(Resource):
             veiculo_data.save()
             return veiculo_schema.dump(veiculo_data), 201
         except exceptions.ValidationError as err:
-            print(">>>>>>> "+ str(err.messages))
-            message_err = str(err.messages);
-        
-        return json.dumps(message_err), 401
+            return jsonify(
+                message=err.messages,
+                category="error",
+                status=401
+            )
     
 class VeiculosFind(Resource):
     def get(self,q):
