@@ -1,8 +1,8 @@
 from flask import Flask, Blueprint
 import os
 from flask_restplus import Api
-from ma import ma
-from db import db
+from src.ma import ma
+from src.db import db
 from marshmallow import ValidationError
 class Server():
     def __init__(self):

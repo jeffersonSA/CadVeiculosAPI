@@ -1,8 +1,8 @@
-from db import db
-from ma import ma
+from src.db import db
+from src.ma import ma
 from marshmallow import ValidationError
-from server.instance import server
-from resources.veiculos import Veiculos, VeiculosList, VeiculosFind
+from src.server.instance import server
+from src.resources.veiculos import Veiculos, VeiculosList, VeiculosFind
 
 api = server.api
 app = server.app

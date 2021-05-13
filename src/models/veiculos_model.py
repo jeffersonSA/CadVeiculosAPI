@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy import or_
-from db import db
+from src.db import db
 
 class VeiculosModel(db.Model):
     __tablename__ = 'veiculos'

@@ -1,8 +1,8 @@
 from flask import request
 from flask_restplus import Resource, fields
-from models.veiculos_model import VeiculosModel
-from schemas.veiculo_schema import VeiculoSchema
-from server.instance import server
+from src.models.veiculos_model import VeiculosModel
+from src.schemas.veiculo_schema import VeiculoSchema
+from src.server.instance import server
 from datetime import datetime
 
 veiculos_ns = server.veiculos_ns
@@ -80,6 +80,7 @@ class VeiculosList(Resource):
     def post(self):
         veiculo_json = request.get_json()
         veiculo_json['created'] = datetime.now()
+        veiculo_json['updated'] = datetime.now()
         
         veiculo_data = veiculo_schema.load(veiculo_json)
         veiculo_data.save()
