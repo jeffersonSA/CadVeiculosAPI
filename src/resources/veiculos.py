@@ -86,7 +86,7 @@ class VeiculosList(Resource):
             return veiculo_schema.dump(veiculo_data), 201
         except exceptions.ValidationError as err:
             print(">>>>>>> "+ str(err.messages))
-            return jsonify(err.messages), 401
+            return jsonify(str(err.messages)), 401
     
 class VeiculosFind(Resource):
     def get(self,q):
