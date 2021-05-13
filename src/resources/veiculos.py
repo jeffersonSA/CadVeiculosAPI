@@ -4,7 +4,7 @@ from src.models.veiculos_model import VeiculosModel
 from src.schemas.veiculo_schema import VeiculoSchema
 from src.server.instance import server
 from datetime import datetime
-
+from marshmallow import exceptions
 veiculos_ns = server.veiculos_ns
 ITEM_NOT_FOUND = 'ITEM_NOT_FOUND'
 
@@ -39,7 +39,7 @@ class Veiculos(Resource):
             veiculo_data.ano = veiculo_json['ano'],
             veiculo_data.descricao = veiculo_json['descricao'],
             veiculo_data.vendido = veiculo_json['vendido'],
-            veiculo_data.updated = datetime.now(),
+            veiculo_data.updated = str(datetime.utcnow()),
         else:
             veiculo_data = veiculo_schema.load(veiculo_json)
 
@@ -49,10 +49,9 @@ class Veiculos(Resource):
     def patch(self,id):
         veiculo_data = VeiculosModel.find_by_id(id)
         veiculo_json = request.get_json()
-
+        veiculo_json['updated'] = str(datetime.utcnow())
         if veiculo_data:
             veiculo_data = veiculo_json
-            veiculo_data.updated = datetime.now(),
         else:
             veiculo_data = veiculo_schema.load(veiculo_json)
 
@@ -68,7 +67,6 @@ class Veiculos(Resource):
         return {'message': ITEM_NOT_FOUND}, 404
 
 class VeiculosList(Resource):
-    
     def get(self):
         veiculo_data = VeiculosModel.find_all()
         if veiculo_data:
@@ -78,13 +76,15 @@ class VeiculosList(Resource):
     @veiculos_ns.expect(item)
     @veiculos_ns.doc('Cria um novo veículo')
     def post(self):
-        veiculo_json = request.get_json()   
-        veiculo_json['created'] = str(datetime.utcnow())
-        veiculo_json['updated'] = str(datetime.utcnow())
-        print("JSON" + str(veiculo_json))
-        veiculo_data = veiculo_schema.load(veiculo_json)
-        veiculo_data.save()
-        return veiculo_schema.dump(veiculo_data), 201
+        try:
+            veiculo_json = request.get_json()   
+            veiculo_json['created'] = str(datetime.utcnow())
+            veiculo_json['updated'] = str(datetime.utcnow())
+            veiculo_data = veiculo_schema.load(veiculo_json)
+            veiculo_data.save()
+            return veiculo_schema.dump(veiculo_data), 201
+        except Exception as e:
+            return {'message': e}
 
 class VeiculosFind(Resource):
     def get(self,q):
