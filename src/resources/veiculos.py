@@ -1,10 +1,10 @@
-from flask import request
+from flask import request, jsonify
 from flask_restplus import Resource, fields
 from src.models.veiculos_model import VeiculosModel
 from src.schemas.veiculo_schema import VeiculoSchema
 from src.server.instance import server
 from datetime import datetime
-from marshmallow import exceptions
+
 veiculos_ns = server.veiculos_ns
 ITEM_NOT_FOUND = 'ITEM_NOT_FOUND'
 
@@ -76,15 +76,16 @@ class VeiculosList(Resource):
     @veiculos_ns.expect(item)
     @veiculos_ns.doc('Cria um novo veículo')
     def post(self):
-        try:
-            veiculo_json = request.get_json()   
-            veiculo_json['created'] = str(datetime.utcnow())
-            veiculo_json['updated'] = str(datetime.utcnow())
-            veiculo_data = veiculo_schema.load(veiculo_json)
-            veiculo_data.save()
-            return veiculo_schema.dump(veiculo_data), 201
-        except Exception as e:
-            return {'message': e}
+        veiculo_json = request.get_json()   
+        veiculo_json['created'] = str(datetime.utcnow())
+        veiculo_json['updated'] = str(datetime.utcnow())
+        veiculo_data, error = veiculo_schema.load(veiculo_json)
+
+        if error:
+            return jsonify(error), 401
+
+        veiculo_data.save()
+        return veiculo_schema.dump(veiculo_data), 201
 
 class VeiculosFind(Resource):
     def get(self,q):
