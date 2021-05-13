@@ -5,6 +5,7 @@ from src.schemas.veiculo_schema import VeiculoSchema
 from src.server.instance import server
 from datetime import datetime
 from marshmallow import exceptions
+import json
 
 veiculos_ns = server.veiculos_ns
 ITEM_NOT_FOUND = 'ITEM_NOT_FOUND'
@@ -78,6 +79,7 @@ class VeiculosList(Resource):
     @veiculos_ns.doc('Cria um novo veículo')
     def post(self):
         try:
+            message_err = ""
             veiculo_json = request.get_json()   
             veiculo_json['created'] = str(datetime.utcnow())
             veiculo_json['updated'] = str(datetime.utcnow())
@@ -86,7 +88,8 @@ class VeiculosList(Resource):
             return veiculo_schema.dump(veiculo_data), 201
         except exceptions.ValidationError as err:
             print(">>>>>>> "+ str(err.messages))
-            return jsonify(str(err.messages)), 401
+        
+        return jsonify(str(err.messages)), 401
     
 class VeiculosFind(Resource):
     def get(self,q):
