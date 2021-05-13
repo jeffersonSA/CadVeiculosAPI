@@ -4,7 +4,7 @@ from src.models.veiculos_model import VeiculosModel
 from src.schemas.veiculo_schema import VeiculoSchema
 from src.server.instance import server
 from datetime import datetime
-from marshmallow import ValidationError
+from marshmallow import exceptions
 
 veiculos_ns = server.veiculos_ns
 ITEM_NOT_FOUND = 'ITEM_NOT_FOUND'
@@ -84,7 +84,8 @@ class VeiculosList(Resource):
             veiculo_data = veiculo_schema.load(veiculo_json)
             veiculo_data.save()
             return veiculo_schema.dump(veiculo_data), 201
-        except ValidationError as err:
+        except exceptions.ValidationError as err:
+            print(">>>>>>> "+ err)
             return jsonify(err), 401
     
 class VeiculosFind(Resource):
