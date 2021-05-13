@@ -78,7 +78,10 @@ class VeiculosList(Resource):
     @veiculos_ns.expect(item)
     @veiculos_ns.doc('Cria um novo veículo')
     def post(self):
-        veiculo_json = request.get_json()        
+        veiculo_json = request.get_json()   
+        print("JSON" + veiculo_json)
+        veiculo_json['created'] = datetime.utcnow
+        veiculo_json['updated'] = datetime.utcnow
         veiculo_data = veiculo_schema.load(veiculo_json)
         veiculo_data.save()
         return veiculo_schema.dump(veiculo_data), 201
