@@ -32,21 +32,28 @@ class Veiculos(Resource):
 
     @veiculos_ns.expect(item)
     def put(self,id):
-        veiculo_data = VeiculosModel.find_by_id(id)
-        veiculo_json = request.get_json()
+        try:
+            veiculo_data = VeiculosModel.find_by_id(id)
+            veiculo_json = request.get_json()
 
-        if veiculo_data:
-            veiculo_data.veiculo = veiculo_json['veiculo'],
-            veiculo_data.marca = veiculo_json['marca'],
-            veiculo_data.ano = veiculo_json['ano'],
-            veiculo_data.descricao = veiculo_json['descricao'],
-            veiculo_data.vendido = veiculo_json['vendido'],
-            veiculo_data.updated = str(datetime.utcnow()),
-        else:
-            veiculo_data = veiculo_schema.load(veiculo_json)
+            if veiculo_data:
+                veiculo_data.veiculo = veiculo_json['veiculo'],
+                veiculo_data.marca = veiculo_json['marca'],
+                veiculo_data.ano = veiculo_json['ano'],
+                veiculo_data.descricao = veiculo_json['descricao'],
+                veiculo_data.vendido = veiculo_json['vendido'],
+                veiculo_data.updated = str(datetime.utcnow()),
+            else:
+                veiculo_data = veiculo_schema.load(veiculo_json)
 
-        veiculo_data.save()
-        return veiculo_schema.dump(veiculo_data), 200
+            veiculo_data.save()
+            return jsonify(message="Atualizado!", category="success", data=veiculo_schema.dump(veiculo_data), status=200)
+        except exceptions.ValidationError as err:
+            return jsonify(
+                message=err.messages,
+                category="error",
+                status=401
+            )
 
     def patch(self,id):
         veiculo_data = VeiculosModel.find_by_id(id)
@@ -60,7 +67,6 @@ class Veiculos(Resource):
         veiculo_data.save()
         return veiculo_schema.dump(veiculo_data), 200
 
-    
     def delete(self,id):
         veiculo_data = VeiculosModel.find_by_id(id)
         if veiculo_data:

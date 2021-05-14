@@ -76,10 +76,47 @@ def test_get_deve_retornar_dados_usando_qualquer_texto_digitado(client):
     assert len(response.get_json()) >=2 
 
 def test_put_deve_atualizar_dado_adicionado(client):
-    ...
+    dado = {
+        'veiculo':'Gol',
+        'ano':2020,
+        'vendido':True,
+        'marca': 'VW', 
+        'descricao': 'Novo'
+    }
+
+    response = client.post('/api/veiculos',json=dado)
+    resp_json = response.get_json()
+    id = resp_json['id']
+
+    dado = {
+        'veiculo':'Golzinho',
+        'ano':2001,
+        'vendido':False,
+        'marca': 'VWs', 
+        'descricao': 'seminovo '
+    }
+
+    response = client.put('/api/veiculos/%s' % id,json=dado)
+    data_resp = response.get_json()['data']
+    del data_resp['created'], data_resp['updated']
+
+    assert data_resp == dado
 
 def test_patch_deve_atualizar_somente_marca(client):
     ...
 
-def test_deve_deletar(client):
-    ...
+def test_delete_deve_mostrar_mensagem_deletado_ao_deleltar(client):
+    dado = {
+        'veiculo':'Gol',
+        'ano':2020,
+        'vendido':True,
+        'marca': 'VW', 
+        'descricao': 'Novo'
+    }
+
+    response = client.post('/api/veiculos',json=dado)
+    resp_json = response.get_json()
+    id = resp_json['id']
+
+    response = client.delete('/api/veiculos/%s' % id)
+    assert response.get_json()['message'] == "Deletado!"
