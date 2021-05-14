@@ -1,4 +1,3 @@
-import json
 def test_post_deve_retornar_erro_quando_o_payload_for_incompleto(client):
     dado = {'veiculo':'Gol','ano':2020,'vendido':True}
     esperado = {'marca': ['Missing data for required field.'], 'descricao': ['Missing data for required field.']}
@@ -98,12 +97,30 @@ def test_put_deve_atualizar_dado_adicionado(client):
 
     response = client.put('/api/veiculos/%s' % id,json=dado)
     data_resp = response.get_json()['data']
-    del data_resp['created'], data_resp['updated']
+    del data_resp['created'], data_resp['updated'], data_resp['id']
 
     assert data_resp == dado
 
-def test_patch_deve_atualizar_somente_marca(client):
-    ...
+def test_patch_deve_atualizar_somente_atributo_vendido(client):
+    dado = {
+        'veiculo':'Audi',
+        'ano':2020,
+        'vendido':False,
+        'marca': 'Audi', 
+        'descricao': 'Novo'
+    }
+
+    response = client.post('/api/veiculos',json=dado)
+    resp_json = response.get_json()
+    id = resp_json['id']
+
+    dado = {
+        'vendido':False
+    }
+
+    response = client.patch('/api/veiculos/%s' % id,json=dado)
+    data_resp = response.get_json()['data']
+    assert data_resp['vendido'] == False
 
 def test_delete_deve_mostrar_mensagem_deletado_ao_deleltar(client):
     dado = {

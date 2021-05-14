@@ -37,16 +37,13 @@ class Veiculos(Resource):
             veiculo_json = request.get_json()
 
             if veiculo_data:
-                print(">>>>>> " + datetime.strptime(str(veiculo_data.created),"%Y-%m-%d %H:%M:%S"))
-                print(">>>>>> " + str(datetime.strptime(str(veiculo_data.created),"%Y-%m-%d %H:%M:%S")))
-                print(">>>>>> " + str(veiculo_data.created))
                 veiculo_data.veiculo = veiculo_json['veiculo']
                 veiculo_data.marca = veiculo_json['marca']
                 veiculo_data.ano = veiculo_json['ano']
                 veiculo_data.descricao = veiculo_json['descricao']
                 veiculo_data.vendido = veiculo_json['vendido']
-                veiculo_data.updated = str(datetime.utcnow())
-                veiculo_data.created = str(datetime.strptime(str(veiculo_data.created),"%Y-%m-%d %H:%M:%S"))
+                veiculo_data.updated = datetime.strptime(str(datetime.utcnow()),'%Y-%m-%d %H:%M:%S.%f')
+                veiculo_data.created = datetime.strptime(str(veiculo_data.created),'%Y-%m-%d %H:%M:%S.%f')
             else:
                 veiculo_data = veiculo_schema.load(veiculo_json)
 
@@ -59,17 +56,42 @@ class Veiculos(Resource):
                 status=401
             )
 
+    @veiculos_ns.expect(item)
     def patch(self,id):
-        veiculo_data = VeiculosModel.find_by_id(id)
-        veiculo_json = request.get_json()
-        veiculo_json['updated'] = str(datetime.utcnow())
-        if veiculo_data:
-            veiculo_data = veiculo_json
-        else:
-            veiculo_data = veiculo_schema.load(veiculo_json)
+        try:
+            veiculo_data = VeiculosModel.find_by_id(id)
+            veiculo_json = request.get_json()
+            veiculo_json['updated'] = datetime.strptime(str(datetime.utcnow()),'%Y-%m-%d %H:%M:%S.%f')
+            if veiculo_data:
+                if 'veiculo' in veiculo_json:
+                    veiculo_data.veiculo
+                
+                if 'marca' in veiculo_json:
+                    veiculo_data.marca = veiculo_json['marca']
+                
+                if 'ano' in veiculo_json:
+                    veiculo_data.ano = veiculo_json['ano']
 
-        veiculo_data.save()
-        return veiculo_schema.dump(veiculo_data), 200
+                if 'descricao' in veiculo_json:
+                    veiculo_data.descricao = veiculo_json['descricao']
+                
+                if 'vendido' in veiculo_json:
+                    veiculo_data.vendido = veiculo_json['vendido']
+                    
+                veiculo_data.updated = datetime.strptime(str(datetime.utcnow()),'%Y-%m-%d %H:%M:%S.%f')
+                veiculo_data.created = datetime.strptime(str(veiculo_data.created),'%Y-%m-%d %H:%M:%S.%f')
+            else:
+                veiculo_data = veiculo_schema.load(veiculo_json)
+
+            veiculo_data.save()
+            
+            return jsonify(message="Atualizado!", category="success", data=veiculo_schema.dump(veiculo_data), status=200)
+        except exceptions.ValidationError as err:
+            return jsonify(
+                message=err.messages,
+                category="error",
+                status=401
+            )
 
     def delete(self,id):
         veiculo_data = VeiculosModel.find_by_id(id)
