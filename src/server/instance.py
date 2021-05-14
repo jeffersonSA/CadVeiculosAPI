@@ -8,7 +8,7 @@ from marshmallow import ValidationError
 class Server():
     def __init__(self):
         self.app = Flask(__name__)
-        CORS(self.app)
+        CORS(self.app, resources={r"/api/*": {"origins": "*"}})
         self.bluePrint = Blueprint('api', __name__, url_prefix='/api')
         self.api = Api(
             self.bluePrint,
