@@ -25,7 +25,7 @@ class VeiculosModel(db.Model):
         self.updated = updated
     
     def __repr__(self,):
-        return f'VeiculosModel(veiculo={self.vendido},marca={self.marca},{self.ano},{self.descricao},{self.vendido},{self.created},{self.updated})'
+        return f'VeiculosModel(veiculo={self.vendido},marca={self.marca},ano={self.ano},descricao={self.descricao},vendido={self.vendido},created={self.created},updated={self.updated})'
 
     def json(self,):
         return{
