@@ -93,7 +93,7 @@ def test_put_deve_atualizar_dado_adicionado(client):
         'ano':2001,
         'vendido':False,
         'marca': 'VWs', 
-        'descricao': 'seminovo '
+        'descricao': 'seminovo'
     }
 
     response = client.put('/api/veiculos/%s' % id,json=dado)

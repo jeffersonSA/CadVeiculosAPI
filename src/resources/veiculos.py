@@ -37,12 +37,16 @@ class Veiculos(Resource):
             veiculo_json = request.get_json()
 
             if veiculo_data:
+                print(">>>>>> " + datetime.strptime(str(veiculo_data.created),"%Y-%m-%d %H:%M:%S"))
+                print(">>>>>> " + str(datetime.strptime(str(veiculo_data.created),"%Y-%m-%d %H:%M:%S")))
+                print(">>>>>> " + str(veiculo_data.created))
                 veiculo_data.veiculo = veiculo_json['veiculo']
                 veiculo_data.marca = veiculo_json['marca']
                 veiculo_data.ano = veiculo_json['ano']
                 veiculo_data.descricao = veiculo_json['descricao']
                 veiculo_data.vendido = veiculo_json['vendido']
                 veiculo_data.updated = str(datetime.utcnow())
+                veiculo_data.created = str(datetime.strptime(str(veiculo_data.created),"%Y-%m-%d %H:%M:%S"))
             else:
                 veiculo_data = veiculo_schema.load(veiculo_json)
 
