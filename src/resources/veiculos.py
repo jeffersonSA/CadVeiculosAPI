@@ -113,14 +113,13 @@ class VeiculosList(Resource):
     def post(self):
         try:
             
-            veiculo_json = request.get_json()
-            print(request.get_data())
-            if veiculo_json is None:
+            veiculo_data = request.get_data()
+            if veiculo_data is None:
                 return {'message': ITEM_NOT_FOUND}, 404
 
-            veiculo_json['created'] = str(datetime.utcnow())
-            veiculo_json['updated'] = str(datetime.utcnow())
-            veiculo_data = veiculo_schema.load(veiculo_json)
+            veiculo_data['created'] = str(datetime.utcnow())
+            veiculo_data['updated'] = str(datetime.utcnow())
+            veiculo_data = veiculo_schema.load(veiculo_data)
             veiculo_data.save()
             return veiculo_schema.dump(veiculo_data), 201,{'content-type': 'application/json'}
         except exceptions.ValidationError as err:
