@@ -114,9 +114,10 @@ class VeiculosList(Resource):
         try:
             
             veiculo_json = request.get_json()
+            print(request.get_data())
             if veiculo_json is None:
                 return {'message': ITEM_NOT_FOUND}, 404
-                
+
             veiculo_json['created'] = str(datetime.utcnow())
             veiculo_json['updated'] = str(datetime.utcnow())
             veiculo_data = veiculo_schema.load(veiculo_json)
