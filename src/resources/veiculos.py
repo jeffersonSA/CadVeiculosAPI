@@ -112,10 +112,10 @@ class VeiculosList(Resource):
     @veiculos_ns.doc('Cria um novo veículo')
     def post(self):
         try:
-            date_created = datetime.strptime(str(datetime.utcnow()),'%Y-%m-%d %H:%M:%S.%f')
+            
             veiculo_json = request.get_json()   
-            veiculo_json['created'] = date_created
-            veiculo_json['updated'] = date_created
+            veiculo_json['created'] = str(datetime.utcnow())
+            veiculo_json['updated'] = str(datetime.utcnow())
             veiculo_data = veiculo_schema.load(veiculo_json)
             veiculo_data.save()
             return veiculo_schema.dump(veiculo_data), 201
