@@ -121,7 +121,9 @@ class VeiculosList(Resource):
             veiculo_json['updated'] = str(datetime.utcnow())
             veiculo_data = veiculo_schema.load(veiculo_json)
             veiculo_data.save()
-            return veiculo_schema.dump(veiculo_data), 201,{'content-type': 'application/json'}
+            resp = veiculo_schema.dump(veiculo_data)
+            print(resp)
+            return resp, 201,{'content-type': 'application/json'}
         except exceptions.ValidationError as err:
             print(err.messages)
             return jsonify(
