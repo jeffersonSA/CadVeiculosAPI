@@ -113,7 +113,7 @@ class VeiculosList(Resource):
     def post(self):
         try:
             
-            veiculo_json = request.get_data()
+            veiculo_json = json.loads(request.get_data())
             if veiculo_json is None:
                 return {'message': ITEM_NOT_FOUND}, 404
 
