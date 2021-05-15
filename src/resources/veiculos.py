@@ -123,6 +123,7 @@ class VeiculosList(Resource):
             veiculo_data.save()
             return veiculo_schema.dump(veiculo_data), 201,{'content-type': 'application/json'}
         except exceptions.ValidationError as err:
+            print(err.messages)
             return jsonify(
                 message=err.messages,
                 category="error",
